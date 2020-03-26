@@ -7,7 +7,6 @@
 using namespace std;
 
 void Board::create_board() { //sets wumpus and gold
-	cout << "create board called" << endl;
 	int rand_int1;
 	int rand_int2;
 	rand_int1 = (rand() % 4);
@@ -27,15 +26,57 @@ void Board::create_board() { //sets wumpus and gold
 		board[rand_int1][rand_int2].SetWumpus();
 	}
 	board[2][0].SetType('N'); //enforces path on board
+	board[robot->GetRow()][robot->GetCol()].SetType('~');
 }
 
-void Board::run_game() {
+void Board::run_game1() {
+	char quit = ' ';
+	print_welcome_menu();
+
+	while (toupper(quit) != 'Q') {
+		reset_robot_tile();
+		robot->ChooseMove();
+		if (check_tile()) {
+			cout << "Robot row: " << robot->GetRow() << endl;
+			cout << "Robot col: " << robot->GetCol() << endl;
+			board[robot->GetRow()][robot->GetCol()].SetType('~');
+		}
+		else {
+			break;
+		}
+		print_board();
+		
+	}
+}
+
+void Board::run_game2() {
 	//FIXME
 }
 
+bool Board::check_tile() {
+	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'P') {
+		cout << "Robot fell into a pit!" << endl;
+		cout << "GAMEOVER" << endl;
+		return false;
+	}
+	else if (board[robot->GetRow()][robot->GetCol()].GetType() == 'W') {
+		cout << "Robot was eaten by the Wumpus!" << endl;
+		cout << "GAMEOVER" << endl;
+		return false;
+	}
+	return true;
+}
+
+void Board::print_welcome_menu() {
+	cout << "Welcome to Wumpus World!" << endl;
+	cout << "You are the robot (~)... avoid the Wumpus and pits and retrieve the gold!" << endl;
+}
+
 void Board::print_board() {
-	cout << board[0][0].GetType() << " | " << board[0][1].GetType() << " | " << board[0][2].GetType() << " | " << board[0][3].GetType() << endl;
-	cout << board[1][0].GetType() << " | " << board[1][1].GetType() << " | " << board[1][2].GetType() << " | " << board[1][3].GetType() << endl;
-	cout << board[2][0].GetType() << " | " << board[2][1].GetType() << " | " << board[2][2].GetType() << " | " << board[2][3].GetType() << endl;
-	cout << board[3][0].GetType() << " | " << board[3][1].GetType() << " | " << board[3][2].GetType() << " | " << board[3][3].GetType() << endl;
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			cout << " | " << board[i][j].GetType() << " | ";
+		}
+		cout << endl;
+	}
 }

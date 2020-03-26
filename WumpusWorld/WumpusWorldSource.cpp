@@ -13,6 +13,8 @@ int main() {
 	the_board = new Board();
 
 	the_board->print_board();
+	
+	the_board->run_game1();
 
     return 0;
 }

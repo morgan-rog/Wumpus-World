@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoardClass.cpp" />
+    <ClCompile Include="RobotClass.cpp" />
     <ClCompile Include="TileClass.cpp" />
     <ClCompile Include="WumpusWorldSource.cpp" />
   </ItemGroup>
