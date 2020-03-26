@@ -29,16 +29,22 @@ void Board::create_board() { //sets wumpus and gold
 	board[robot->GetRow()][robot->GetCol()].SetType('~');
 }
 
-void Board::run_game1() {
+void Board::run_game1() { //PHASE 1
 	char quit = ' ';
 	print_welcome_menu();
 
 	while (toupper(quit) != 'Q') {
 		reset_robot_tile();
+		if (check_tile_clues()) {
+			if (shoot_wumpus()) {
+				cout << "Robot successfully taken down wumpus!!!" << endl; //FIXME
+			}
+		}
 		robot->ChooseMove();
-		if (check_tile()) {
-			cout << "Robot row: " << robot->GetRow() << endl;
-			cout << "Robot col: " << robot->GetCol() << endl;
+		if (check_tile_pit_or_wumpus()) {
+			if (check_tile_gold()) {
+				break;
+			}
 			board[robot->GetRow()][robot->GetCol()].SetType('~');
 		}
 		else {
@@ -49,11 +55,15 @@ void Board::run_game1() {
 	}
 }
 
-void Board::run_game2() {
-	//FIXME
+void Board::run_game2() { //PHASE 2
+	print_phase2_menu();
 }
 
-bool Board::check_tile() {
+bool Board::shoot_wumpus() { //FIXME
+	return false;
+}
+
+bool Board::check_tile_pit_or_wumpus() {
 	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'P') {
 		cout << "Robot fell into a pit!" << endl;
 		cout << "GAMEOVER" << endl;
@@ -67,15 +77,136 @@ bool Board::check_tile() {
 	return true;
 }
 
+bool Board::check_tile_gold() {
+	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'G') {
+		cout << "Robot collected gold! Moving on to phase 2..." << endl;
+		return true;
+	}
+	return false;
+}
+
+bool Board::check_tile_clues() {
+	bool wumpus = false;
+	cout << "Checking for clues..." << endl;
+	int r = robot->GetRow(), c = robot->GetCol() - 1; //left square
+	int r2 = robot->GetRow(), c2 = robot->GetCol() + 1; //right square
+	int r3 = robot->GetRow() - 1, c3 = robot->GetCol(); //upper square
+	int r4 = robot->GetRow() + 1, c4 = robot->GetCol(); //lower square
+	//cout << "left square: " << r << " " << c << endl;
+	//cout << "right square: " << r2 << " " << c2 << endl;
+	//cout << "upper square: " << r3 << " " << c3 << endl;
+	//cout << "lower square: " << r4 << " " << c4 << endl;
+
+	if (r >= 0 && r <= 3 && c >= 0 && c <= 3) { //left square test
+		switch (board[r][c].GetType()) {
+		case 'W':
+		{
+			cout << "Robot: I smell a horrible smell..." << endl;
+			wumpus = true;
+			break;
+		}
+		case 'G':
+		{
+			cout << "Robot: I see glitter..." << endl;
+			break;
+		}
+		case 'P':
+		{
+			cout << "Robot: I feel a breeze..." << endl;
+			break;
+		}
+		}
+	}
+	if (r2 >= 0 && r2 <= 3 && c2 >= 0 && c2 <= 3) { //right square test
+		switch (board[r2][c2].GetType()) {
+		case 'W':
+		{
+			cout << "Robot: I smell a horrible smell..." << endl;
+			wumpus = true;
+			break;
+		}
+		case 'G':
+		{
+			cout << "Robot: I see glitter..." << endl;
+			break;
+		}
+		case 'P':
+		{
+			cout << "Robot: I feel a breeze..." << endl;
+			break;
+		}
+		}
+	}
+	if (r3 >= 0 && r3 <= 3 && c3 >= 0 && c3 <= 3) { //upper square test
+		switch (board[r3][c3].GetType()) {
+		case 'W':
+		{
+			cout << "Robot: I smell a horrible smell..." << endl;
+			wumpus = true;
+			break;
+		}
+		case 'G':
+		{
+			cout << "Robot: I see glitter..." << endl;
+			break;
+		}
+		case 'P':
+		{
+			cout << "Robot: I feel a breeze..." << endl;
+			break;
+		}
+		}
+	}
+	if (r4 >= 0 && r4 <= 3 && c4 >= 0 && c4 <= 3) { //lower square test
+		switch (board[r4][c4].GetType()) {
+		case 'W':
+		{
+			cout << "Robot: I smell a horrible smell..." << endl;
+			wumpus = true;
+			break;
+		}
+		case 'G':
+		{
+			cout << "Robot: I see glitter..." << endl;
+			break;
+		}
+		case 'P':
+		{
+			cout << "Robot: I feel a breeze..." << endl;
+			break;
+		}
+		}
+	}
+	return wumpus;
+}
+
 void Board::print_welcome_menu() {
 	cout << "Welcome to Wumpus World!" << endl;
 	cout << "You are the robot (~)... avoid the Wumpus and pits and retrieve the gold!" << endl;
 }
 
+void Board::print_phase2_menu() {
+	cout << "Welcome to Wumpus World Phase 2!" << endl;
+	cout << "Make it back to the starting position and you win!!" << endl;
+}
+
 void Board::print_board() {
-	for (int i = 0; i < 4; ++i) {
+	cout << "unhidden board" << endl;
+	for (int i = 0; i < 4; ++i) { //unhidden board
 		for (int j = 0; j < 4; ++j) {
 			cout << " | " << board[i][j].GetType() << " | ";
+		}
+		cout << endl;
+	}
+	cout << "hidden board" << endl;
+	for (int i = 0; i < 4; ++i) { //hidden board
+		for (int j = 0; j < 4; ++j) {
+			if (board[i][j].GetType() == '~') {
+				cout << " | " << board[i][j].GetType() << " | ";
+			}
+			else {
+				cout << " | " << board[i][j].GetHiddenType() << " | ";
+			}
 		}
 		cout << endl;
 	}

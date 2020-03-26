@@ -6,6 +6,7 @@ using namespace std;
 Robot::Robot() {
 	row = 0;
 	col = 0;
+	arrow = 1;
 }
 
 void Robot::ChooseMove() {
@@ -14,11 +15,11 @@ void Robot::ChooseMove() {
 	bool success = false;
 
 	while (!success) {
-		cout << "Where's your next move? (D)own (U)p (R)ight (L)eft" << endl;
+		cout << "Where's your next move? (S) down (W) up (D) right (A) left" << endl;
 		cin >> choice;
 
 		switch (toupper(choice)) {
-		case 'D':
+		case 'S':
 		{
 			r = row + 1;
 			if (r > 3 || r < 0) {
@@ -30,7 +31,7 @@ void Robot::ChooseMove() {
 			}
 			break;
 		}
-		case 'U':
+		case 'W':
 		{
 			r = row - 1;
 			if (r > 3 || r < 0) {
@@ -42,7 +43,7 @@ void Robot::ChooseMove() {
 			}
 			break;
 		}
-		case 'R':
+		case 'D':
 		{
 			c = col + 1;
 			if (c > 3 || c < 0) {
@@ -54,7 +55,7 @@ void Robot::ChooseMove() {
 			}
 			break;
 		}
-		case 'L':
+		case 'A':
 		{
 			c = col - 1;
 			if (c > 3 || c < 0) {

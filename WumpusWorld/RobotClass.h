@@ -16,6 +16,7 @@ public:
 private:
 	int row;
 	int col;
+	int arrow;
 };
 
 #endif ROBOTCLASS_H
