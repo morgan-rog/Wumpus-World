@@ -14,11 +14,14 @@ public:
 	int GetArrow() { return arrow; }
 	void LoseArrow() { arrow -= 1; }
 	void ChooseMove();
+	void SetGoldTrue() { gold = true; }
+	bool GetGold() { return gold; }
 
 private:
 	int row;
 	int col;
 	int arrow;
+	bool gold;
 };
 
 #endif ROBOTCLASS_H

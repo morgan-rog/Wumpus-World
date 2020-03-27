@@ -2,7 +2,6 @@
 #ifndef TILECLASS_H
 #define TILECLASS_H
 #include <iostream>
-#include <string>
 
 class Tile { //tile class initialy decides if tile is a pit or not, then board class sets wumpus and gold
 public:

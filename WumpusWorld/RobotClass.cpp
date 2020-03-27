@@ -7,6 +7,7 @@ Robot::Robot() {
 	row = 0;
 	col = 0;
 	arrow = 1;
+	gold = false;
 }
 
 void Robot::ChooseMove() {

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <string>
 #include <cstdlib>
 #include "TileClass.h"
@@ -16,8 +15,9 @@ int main() {
 	
 	the_board->run_game1(); //phase 1
 
-	if (the_board->check_tile_gold()) { //phase 2
+	if (the_board->check_robot_gold()) { //phase 2
         the_board->run_game2();
 	}
+
     return 0;
 }

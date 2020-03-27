@@ -1,5 +1,6 @@
 ﻿  BoardClass.cpp
-  RobotClass.cpp
+D:\CS_201R\WWGitRepo\WumpusWorld\BoardClass.cpp(11,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  TileClass.cpp
   WumpusWorldSource.cpp
   Generating Code...
   WumpusWorld.vcxproj -> D:\CS_201R\WWGitRepo\WumpusWorld\Debug\WumpusWorld.exe
