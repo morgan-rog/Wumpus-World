@@ -11,6 +11,8 @@ public:
 	void SetCol(int c) { col = c; }
 	int GetRow() { return row; }
 	int GetCol() { return col; }
+	int GetArrow() { return arrow; }
+	void LoseArrow() { arrow -= 1; }
 	void ChooseMove();
 
 private:

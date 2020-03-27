@@ -1,2 +1,5 @@
 ﻿  BoardClass.cpp
+  RobotClass.cpp
+  WumpusWorldSource.cpp
+  Generating Code...
   WumpusWorld.vcxproj -> D:\CS_201R\WWGitRepo\WumpusWorld\Debug\WumpusWorld.exe

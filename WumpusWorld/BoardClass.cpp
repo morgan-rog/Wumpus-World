@@ -35,9 +35,11 @@ void Board::run_game1() { //PHASE 1
 
 	while (toupper(quit) != 'Q') {
 		reset_robot_tile();
-		if (check_tile_clues()) {
+		if (check_tile_clues()) { //returns true if robot receives wumpus smell
 			if (shoot_wumpus()) {
-				cout << "Robot successfully taken down wumpus!!!" << endl; //FIXME
+				cout << endl;
+				cout << "Robot successfully shot the wumpus!!! Collect the gold!!!" << endl; 
+				cout << endl;
 			}
 		}
 		robot->ChooseMove();
@@ -60,6 +62,129 @@ void Board::run_game2() { //PHASE 2
 }
 
 bool Board::shoot_wumpus() { //FIXME
+	char choice = ' ';
+	int r, c;
+	char face;
+
+	while (toupper(choice) != 'Y' && toupper(choice) != 'N') {
+		if (robot->GetArrow() < 1) {
+			return false;
+		}
+		cout << "Use only arrow to try and shoot the Wumpus? (Y)es (N)o" << endl;
+		cin >> choice;
+		if (toupper(choice) == 'Y') {
+			while (true) {
+				cout << "Where do you want the robot to face? (S) down (W) up (D) right (A) left" << endl;
+				cin >> face;
+				switch (toupper(face)) {
+				case 'S': //face down
+				{
+					r = robot->GetRow() + 1;
+					c = robot->GetCol();
+					if (r >= 0 && r <= 3 && c >= 0 && c <= 3) {
+						if (board[r][c].GetType() == 'W') {
+							board[r][c].SetType('N');
+							return true;
+						}
+						else {
+							robot->LoseArrow();
+							cout << endl;
+							cout << "Robot was not able to successfully shoot the Wumpus...Robot's only arrow lost" << endl;
+							cout << "Good Luck!" << endl;
+							cout << endl;
+							return false; 
+						}
+					}
+					else {
+						return false;
+					}
+					break;
+				}
+				case 'W': //face up
+				{
+					r = robot->GetRow() - 1;
+					c = robot->GetCol();
+					if (r >= 0 && r <= 3 && c >= 0 && c <= 3) {
+						if (board[r][c].GetType() == 'W') {
+							board[r][c].SetType('N');
+							return true;
+						}
+						else {
+							robot->LoseArrow();
+							cout << endl;
+							cout << "Robot was not able to successfully shoot the Wumpus...Robot's only arrow lost" << endl;
+							cout << "Good Luck!" << endl;
+							cout << endl;
+							return false; 
+						}
+					}
+					else {
+						return false;
+					}
+					break;
+				}
+				case 'D': //face right
+				{
+					r = robot->GetRow();
+					c = robot->GetCol() + 1;
+					if (r >= 0 && r <= 3 && c >= 0 && c <= 3) {
+						if (board[r][c].GetType() == 'W') {
+							board[r][c].SetType('N');
+							return true;
+						}
+						else {
+							robot->LoseArrow();
+							cout << endl;
+							cout << "Robot was not able to successfully shoot the Wumpus...Robot's only arrow lost" << endl;
+							cout << "Good Luck!" << endl;
+							cout << endl;
+							return false; 
+						}
+					}
+					else {
+						return false;
+					}
+					break;
+				}
+				case 'A': //face left
+				{
+					r = robot->GetRow() - 1;
+					c = robot->GetCol();
+					if (r >= 0 && r <= 3 && c >= 0 && c <= 3) {
+						if (board[r][c].GetType() == 'W') {
+							board[r][c].SetType('N');
+							return true;
+						}
+						else {
+							robot->LoseArrow();
+							cout << endl;
+							cout << "Robot was not able to successfully shoot the Wumpus...Robot's only arrow lost" << endl;
+							cout << "Good Luck!" << endl;
+							cout << endl;
+							return false; 
+						}
+					}
+					else {
+						return false;
+					}
+					break;
+				}
+				default:
+				{
+					cout << "Please enter valid facing" << endl;
+					break;
+				}
+				}
+			}
+
+		}
+		else if (toupper(choice) == 'N') {
+			return false;
+		}
+		else {
+			cout << "Please enter a valid choice" << endl;
+		}
+	}
 	return false;
 }
 
@@ -92,10 +217,6 @@ bool Board::check_tile_clues() {
 	int r2 = robot->GetRow(), c2 = robot->GetCol() + 1; //right square
 	int r3 = robot->GetRow() - 1, c3 = robot->GetCol(); //upper square
 	int r4 = robot->GetRow() + 1, c4 = robot->GetCol(); //lower square
-	//cout << "left square: " << r << " " << c << endl;
-	//cout << "right square: " << r2 << " " << c2 << endl;
-	//cout << "upper square: " << r3 << " " << c3 << endl;
-	//cout << "lower square: " << r4 << " " << c4 << endl;
 
 	if (r >= 0 && r <= 3 && c >= 0 && c <= 3) { //left square test
 		switch (board[r][c].GetType()) {
@@ -181,13 +302,17 @@ bool Board::check_tile_clues() {
 }
 
 void Board::print_welcome_menu() {
+	cout << endl;
 	cout << "Welcome to Wumpus World!" << endl;
-	cout << "You are the robot (~)... avoid the Wumpus and pits and retrieve the gold!" << endl;
+	cout << "You are the robot (~)... avoid the Wumpus and pits and collect the gold!" << endl;
+	cout << endl;
 }
 
 void Board::print_phase2_menu() {
+	cout << endl;
 	cout << "Welcome to Wumpus World Phase 2!" << endl;
 	cout << "Make it back to the starting position and you win!!" << endl;
+	cout << endl;
 }
 
 void Board::print_board() {
