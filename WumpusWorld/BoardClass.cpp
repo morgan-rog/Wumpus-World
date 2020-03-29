@@ -6,26 +6,32 @@
 using namespace std;
 
 void Board::create_board() { //sets wumpus and gold
-	int rand_int1;
-	int rand_int2;
+	board[2][0].SetType('N'); //enforces path on board
+	int rand_int1_gold, rand_int1_wump;
+	int rand_int2_gold, rand_int2_wump;
 	srand(time(0));
-	rand_int1 = (rand() % 4);
-	rand_int2 = (rand() % 4);
-	if (rand_int1 == 0 && rand_int2 == 0) {
+	rand_int1_gold = (rand() % 4); //set gold tile
+	rand_int2_gold = (rand() % 4);
+	if (rand_int1_gold == 0 && rand_int2_gold == 0) {
 		board[3][3].SetGold();
 	}
 	else {
-		board[rand_int1][rand_int2].SetGold();
+		board[rand_int1_gold][rand_int2_gold].SetGold();
 	}
-	rand_int1 = (rand() % 4);
-	rand_int2 = (rand() % 4);
-	if (rand_int1 == 0 && rand_int2 == 0) {
+
+	rand_int1_wump = (rand() % 4); //set wumpus tile
+	rand_int2_wump = (rand() % 4);
+	if (rand_int1_wump == 0 && rand_int2_wump == 0) {
 		board[2][2].SetWumpus();
 	}
-	else {
-		board[rand_int1][rand_int2].SetWumpus();
+	else if ((rand_int1_wump == rand_int1_gold) && (rand_int2_wump == rand_int2_gold)) {
+		rand_int1_wump = (rand() % 4);
+		rand_int2_wump = (rand() % 4);
+		board[rand_int1_wump][rand_int2_wump].SetWumpus();
 	}
-	board[2][0].SetType('N'); //enforces path on board
+	else {
+		board[rand_int1_wump][rand_int2_wump].SetWumpus();
+	}
 	board[robot->GetRow()][robot->GetCol()].SetType('~');
 
 }
@@ -52,7 +58,7 @@ void Board::run_game1() { //PHASE 1
 		else {
 			break;
 		}
-		print_board();
+		print_hidden_board();
 		
 	}
 }
@@ -61,7 +67,7 @@ void Board::run_game2() { //PHASE 2
 	print_phase2_menu();
 	board[robot->GetRow()][robot->GetCol()].SetType('~'); //set gold square to robot
 	board[0][0].SetType('L'); //sets start square as the ladder to get out
-	print_board();
+	print_hidden_board();
 
 	while (true) {
 		reset_robot_tile();
@@ -75,7 +81,7 @@ void Board::run_game2() { //PHASE 2
 		else { 
 			break; 
 		}
-		print_board();
+		print_hidden_board();
 	}
 }
 
@@ -84,13 +90,13 @@ bool Board::shoot_wumpus() {
 	int r, c;
 	char face;
 
-	while (toupper(choice) != 'Y' && toupper(choice) != 'N') {
+	while (toupper(choice) != 'N') {
 		if (robot->GetArrow() < 1) {
 			return false;
 		}
-		cout << "Use only arrow to try and shoot the Wumpus? (Y)es (N)o" << endl;
+		cout << "Use only arrow to try and shoot the Wumpus? Press N for No, any key for Yes" << endl;
 		cin >> choice;
-		if (toupper(choice) == 'Y') {
+		if (toupper(choice) != 'N') {
 			while (true) {
 				cout << "Where do you want the robot to face? (S) down (W) up (D) right (A) left" << endl;
 				cin >> face;
@@ -197,22 +203,21 @@ bool Board::shoot_wumpus() {
 
 		}
 		else if (toupper(choice) == 'N') {
-			return false;
-		}
-		else {
-			cout << "Please enter a valid choice" << endl;
-		}
+		    return false;
+        }
 	}
 	return false;
 }
 
 bool Board::check_tile_pit_or_wumpus() {
 	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'P') {
+		cout << endl;
 		cout << "Robot fell into a pit!" << endl;
 		cout << "GAMEOVER" << endl;
 		return false;
 	}
 	else if (board[robot->GetRow()][robot->GetCol()].GetType() == 'W') {
+		cout << endl;
 		cout << "Robot was eaten by the Wumpus!" << endl;
 		cout << "GAMEOVER" << endl;
 		return false;
@@ -222,6 +227,7 @@ bool Board::check_tile_pit_or_wumpus() {
 
 bool Board::check_tile_gold() {
 	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'G') {
+		cout << endl;
 		cout << "Robot collected gold!" << endl;
 		robot->SetGoldTrue();
 		return true;
@@ -241,18 +247,18 @@ bool Board::check_tile_clues() {
 		switch (board[r][c].GetType()) {
 		case 'W':
 		{
-			cout << "Robot: I smell a horrible smell..." << endl;
+			robot->SetSmell(true);
 			wumpus = true;
 			break;
 		}
 		case 'G':
 		{
-			cout << "Robot: I see glitter..." << endl;
+			robot->SetGlitter(true);
 			break;
 		}
 		case 'P':
 		{
-			cout << "Robot: I feel a breeze..." << endl;
+			robot->SetBreeze(true);
 			break;
 		}
 		}
@@ -261,18 +267,18 @@ bool Board::check_tile_clues() {
 		switch (board[r2][c2].GetType()) {
 		case 'W':
 		{
-			cout << "Robot: I smell a horrible smell..." << endl;
+			robot->SetSmell(true);
 			wumpus = true;
 			break;
 		}
 		case 'G':
 		{
-			cout << "Robot: I see glitter..." << endl;
+			robot->SetGlitter(true);
 			break;
 		}
 		case 'P':
 		{
-			cout << "Robot: I feel a breeze..." << endl;
+			robot->SetBreeze(true);
 			break;
 		}
 		}
@@ -281,18 +287,18 @@ bool Board::check_tile_clues() {
 		switch (board[r3][c3].GetType()) {
 		case 'W':
 		{
-			cout << "Robot: I smell a horrible smell..." << endl;
+			robot->SetSmell(true);
 			wumpus = true;
 			break;
 		}
 		case 'G':
 		{
-			cout << "Robot: I see glitter..." << endl;
+			robot->SetGlitter(true);
 			break;
 		}
 		case 'P':
 		{
-			cout << "Robot: I feel a breeze..." << endl;
+			robot->SetBreeze(true);
 			break;
 		}
 		}
@@ -301,22 +307,34 @@ bool Board::check_tile_clues() {
 		switch (board[r4][c4].GetType()) {
 		case 'W':
 		{
-			cout << "Robot: I smell a horrible smell..." << endl;
+			robot->SetSmell(true);
 			wumpus = true;
 			break;
 		}
 		case 'G':
 		{
-			cout << "Robot: I see glitter..." << endl;
+			robot->SetGlitter(true);
 			break;
 		}
 		case 'P':
 		{
-			cout << "Robot: I feel a breeze..." << endl;
+			robot->SetBreeze(true);
 			break;
 		}
 		}
 	}
+	if (robot->GetSmell()) {
+		cout << "Robot: I smell a horrible smell..." << endl;
+	}
+	if (robot->GetGlitter()) {
+		cout << "Robot: I see glitter..." << endl;
+	}
+	if (robot->GetBreeze()) {
+		cout << "Robot: I feel a breeze..." << endl;
+	}
+	robot->SetSmell(false);
+	robot->SetGlitter(false);
+	robot->SetBreeze(false);
 	return wumpus;
 }
 
@@ -332,28 +350,19 @@ bool Board::check_ladder() {
 void Board::print_welcome_menu() {
 	cout << endl;
 	cout << "Welcome to Wumpus World!" << endl;
-	cout << "You are the robot (~)... avoid the Wumpus and pits and collect the gold!" << endl;
+	cout << "You are the robot (~)... shoot the Wumpus, avoid the pits, and collect the gold!" << endl;
 	cout << endl;
 }
 
 void Board::print_phase2_menu() {
 	cout << endl;
-	cout << "Welcome to Wumpus World Phase 2!" << endl;
-	cout << "Make it back to the starting position and you win!!" << endl;
+	cout << "Wumpus World Phase 2!" << endl;
+	cout << "You successfully collected the gold! Make it back to the ladder and you win!!" << endl;
 	cout << endl;
 }
 
-void Board::print_board() {
-	/*cout << "unhidden board" << endl;
-	for (int i = 0; i < 4; ++i) { //unhidden board
-		for (int j = 0; j < 4; ++j) {
-			cout << " | " << board[i][j].GetType() << " | ";
-		}
-		cout << endl;
-	}
-	cout << "hidden board" << endl;*/
-
-	for (int i = 0; i < 4; ++i) { //hidden board
+void Board::print_hidden_board() {
+    for (int i = 0; i < 4; ++i) { //hidden board
 		for (int j = 0; j < 4; ++j) {
 			if (board[i][j].GetType() == '~') { //outputs robot
 				cout << " | " << board[i][j].GetType() << " | ";
@@ -367,4 +376,16 @@ void Board::print_board() {
 		}
 		cout << endl;
 	}
+}
+void Board::print_unhidden_board() {
+	cout << endl;
+	cout << "Unhidden board:" << endl;
+	for (int i = 0; i < 4; ++i) { //unhidden board
+		for (int j = 0; j < 4; ++j) {
+			cout << " | " << board[i][j].GetType() << " | ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	cout << "Thanks for playing!" << endl;
 }

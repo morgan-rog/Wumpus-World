@@ -16,12 +16,22 @@ public:
 	void ChooseMove();
 	void SetGoldTrue() { gold = true; }
 	bool GetGold() { return gold; }
+	bool GetGlitter() { return glitter; }
+	bool GetSmell() { return horrible_smell; }
+	bool GetBreeze() { return breeze; }
+	void SetGlitter(bool x) { glitter = x; }
+	void SetSmell(bool x) { horrible_smell = x; }
+	void SetBreeze(bool x) { breeze = x; }
 
 private:
 	int row;
 	int col;
 	int arrow;
 	bool gold;
+
+	bool glitter; //clues
+	bool horrible_smell;
+	bool breeze;
 };
 
 #endif ROBOTCLASS_H

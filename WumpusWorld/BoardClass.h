@@ -12,7 +12,8 @@ public:
 	void run_game2(); //game phase 2
 	void print_welcome_menu();
 	void print_phase2_menu();
-	void print_board();
+	void print_hidden_board();
+	void print_unhidden_board();
 	bool check_tile_pit_or_wumpus(); //if true-->game continues, if false-->gameover
 	bool check_tile_gold();
 	bool check_robot_gold() { return robot->GetGold(); } //checks if robot has collected the gold

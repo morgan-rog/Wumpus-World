@@ -8,6 +8,9 @@ Robot::Robot() {
 	col = 0;
 	arrow = 1;
 	gold = false;
+	glitter = false;
+	horrible_smell = false;
+	breeze = false;
 }
 
 void Robot::ChooseMove() {
