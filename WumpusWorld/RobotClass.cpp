@@ -3,14 +3,16 @@
 
 using namespace std;
 
-Robot::Robot() {
-	row = 0;
-	col = 0;
+void Robot::ResetRobot() {
 	arrow = 1;
 	gold = false;
+	ruby = false;
+	ladder = false;
 	glitter = false;
+	red_glitter = false;
 	horrible_smell = false;
 	breeze = false;
+	gameover = false;
 }
 
 void Robot::ChooseMove() {
@@ -27,7 +29,8 @@ void Robot::ChooseMove() {
 		{
 			r = row + 1;
 			if (r > 3 || r < 0) {
-				cout << "Invalid move - cannot move down" << endl;
+				cout << "BOUNCE!" << endl;
+				cout << "Robot hit a wall!" << endl;
 			}
 			else {
 				row = r;
@@ -39,7 +42,8 @@ void Robot::ChooseMove() {
 		{
 			r = row - 1;
 			if (r > 3 || r < 0) {
-				cout << "Invalid move - cannot move up" << endl;
+				cout << "BOUNCE!" << endl;
+				cout << "Robot hit a wall!" << endl;
 			}
 			else {
 				row = r;
@@ -51,7 +55,8 @@ void Robot::ChooseMove() {
 		{
 			c = col + 1;
 			if (c > 3 || c < 0) {
-				cout << "Invalid move - cannot move right" << endl;
+				cout << "BOUNCE!" << endl;
+				cout << "Robot hit a wall!" << endl;
 			}
 			else {
 				col = c;
@@ -63,7 +68,8 @@ void Robot::ChooseMove() {
 		{
 			c = col - 1;
 			if (c > 3 || c < 0) {
-				cout << "Invalid move - cannot move left" << endl;
+				cout << "BOUNCE!" << endl;
+				cout << "Robot hit a wall!" << endl;
 			}
 			else {
 				col = c;

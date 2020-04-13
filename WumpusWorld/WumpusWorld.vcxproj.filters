@@ -18,9 +18,6 @@
     <ClCompile Include="WumpusWorldSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TileClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BoardClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

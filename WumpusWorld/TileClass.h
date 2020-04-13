@@ -3,15 +3,18 @@
 #define TILECLASS_H
 #include <iostream>
 
-class Tile { //tile class initialy decides if tile is a pit or not, then board class sets wumpus and gold
+class Tile {
 public:
-	Tile() { SetTilePits(); }
-	void SetTilePits(); //sets all the tiles randomly to either empty or to a pit
-	void SetWumpus() {type = 'W';} //sets tile as the wumpus
+	Tile() { SetEmpty(); }
+	void SetWumpus() { type = 'W'; } //sets tile as the wumpus
 	void SetGold() { type = 'G'; } //sets tile as the gold
+	void SetRuby() { type = 'R'; } //sets tile as the ruby
+	void SetEmpty() { type = 'N'; }
+	void SetPit() { type = 'P'; }
+	void SetRobot() { type = '~'; }
+	void SetLadder() { type = 'L'; }
 	char GetType() { return type; }
 	char GetHiddenType() { return hidden_type; }
-	void SetType(char c) { type = c; }
 	
 
 private:

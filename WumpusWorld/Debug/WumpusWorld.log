@@ -1,3 +1,7 @@
 ﻿  BoardClass.cpp
-D:\CS_201R\WWGitRepo\WumpusWorld\BoardClass.cpp(12,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\CS_201R\WWGitRepo\WumpusWorld\BoardClass.cpp(29,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\CS_201R\WWGitRepo\WumpusWorld\BoardClass.cpp(45,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\CS_201R\WWGitRepo\WumpusWorld\BoardClass.cpp(64,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  WumpusWorldSource.cpp
+  Generating Code...
   WumpusWorld.vcxproj -> D:\CS_201R\WWGitRepo\WumpusWorld\Debug\WumpusWorld.exe
