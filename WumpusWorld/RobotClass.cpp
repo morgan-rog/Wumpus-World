@@ -14,6 +14,18 @@ void Robot::ResetRobot() {
 	breeze = false;
 	gameover = false;
 }
+void Robot::LoseWumpusPoints() {
+	total_points -= 50;
+	if (total_points < 0) {
+		total_points = 0;
+	}
+}
+void Robot::LosePitPoints() {
+	total_points -= 25;
+	if (total_points < 0) {
+		total_points = 0;
+	}
+}
 
 void Robot::ChooseMove() {
 	int r, c;

@@ -112,11 +112,123 @@ void Board::set_wumpus_and_gold() {
 	}
 }
 
+bool Board::wumpus_move() {
+	srand(time(0));
+	int count = 0;
+	int row, col;
+	for (int i = 0; i < 4; ++i) { //find wumpus location
+		for (int j = 0; j < 4; ++j) {
+			if (board[i][j].GetType() == 'W') {
+				count += 1;
+				row = i;
+				col = j;
+			}
+		}
+	}
+	if (count == 0) {
+		return false;
+	}
+	int rand_num = (rand() % 4) + 1;
+	cout << "Wumpus rand num: " << rand_num << endl;
+	switch (rand_num) {
+	case 1:
+	{
+		int r = row, c = col - 1; //left square
+		if (r >= 0 && r <= 3 && c >= 0 && c <= 3) { //left square test
+			if (board[r][c].GetType() == '~') {
+				board[r][c].SetWumpus();
+				board[row][col].SetEmpty();
+				cout << "WUMPUS ATE THE ROBOT! (minus 50 points)" << endl;
+				cout << "GAMEOVER" << endl;
+				robot->LoseWumpusPoints();
+				cout << "Robot Points: " << robot->GetPoints() << endl; //output points
+                return true;
+			}
+			else if (board[r][c].GetType() == 'N'){
+				board[r][c].SetWumpus();
+				board[row][col].SetEmpty();
+				return false;
+			}
+		}
+		break;
+	}
+	case 2:
+	{
+		int r2 = row, c2 = col + 1; //right square
+		if (r2 >= 0 && r2 <= 3 && c2 >= 0 && c2 <= 3) { //right square test
+			if (board[r2][c2].GetType() == '~') {
+				board[r2][c2].SetWumpus();
+				board[row][col].SetEmpty();
+				cout << "WUMPUS ATE THE ROBOT! (minus 50 points)" << endl;
+				cout << "GAMEOVER" << endl;
+				robot->LoseWumpusPoints();
+				cout << "Robot Points: " << robot->GetPoints() << endl; //output points
+				return true;
+			}
+			else if (board[r2][c2].GetType() == 'N') {
+				board[r2][c2].SetWumpus();
+				board[row][col].SetEmpty();
+				return false;
+			}
+		}
+
+		break;
+	}
+	case 3:
+	{
+		int r3 = row - 1, c3 = col; //upper square
+		if (r3 >= 0 && r3 <= 3 && c3 >= 0 && c3 <= 3) { //upper square test
+			if (board[r3][c3].GetType() == '~') {
+				board[r3][c3].SetWumpus();
+				board[row][col].SetEmpty();
+				cout << "WUMPUS ATE THE ROBOT! (minus 50 points)" << endl;
+				cout << "GAMEOVER" << endl;
+				robot->LoseWumpusPoints();
+				cout << "Robot Points: " << robot->GetPoints() << endl; //output points
+				return true;
+			}
+			else if (board[r3][c3].GetType() == 'N') {
+				board[r3][c3].SetWumpus();
+				board[row][col].SetEmpty();
+				return false;
+			}
+		}
+
+		break;
+	}
+	case 4:
+	{
+		int r4 = row + 1, c4 = col; //lower square
+		if (r4 >= 0 && r4 <= 3 && c4 >= 0 && c4 <= 3) { //lower square test
+			if (board[r4][c4].GetType() == '~') {
+				board[r4][c4].SetWumpus();
+				board[row][col].SetEmpty();
+				cout << "WUMPUS ATE THE ROBOT! (minus 50 points)" << endl;
+				cout << "GAMEOVER" << endl;
+				robot->LoseWumpusPoints();
+				cout << "Robot Points: " << robot->GetPoints() << endl; //output points
+				return true;
+			}
+			else if (board[r4][c4].GetType() == 'N') {
+				board[r4][c4].SetWumpus();
+				board[row][col].SetEmpty();
+				return false;
+			}
+		}
+
+		break;
+	}
+	}
+	return false;
+
+}
+
 void Board::run_game1() { //PHASE 1
 
 	while (true) {
-		//print_unhidden_board();
+		print_unhidden_board();
 		reset_robot_tile();
+		
 		if (check_tile_clues()) { //returns true if robot receives wumpus smell
 			if (shoot_wumpus()) { //returns true if robot shot the wumpus
 				cout << endl;
@@ -124,7 +236,9 @@ void Board::run_game1() { //PHASE 1
 				cout << endl;
 			}
 		}
-		robot->ChooseMove();
+		
+		robot->ChooseMove(); //robot move
+		
 		if (check_tile_pit_or_wumpus()) { //returns true if no pit or wumpus
 			if (check_ladder()) { //returns true if tile is ladder
 				break;
@@ -137,30 +251,12 @@ void Board::run_game1() { //PHASE 1
 		else {
 			break;
 		}
+		if (wumpus_move()) { //wumpus move - returns true if wumpus eats robot
+			robot->SetGameOver(true);
+			break;
+		}
 		print_hidden_board();
 		
-	}
-}
-
-void Board::run_game2() { //PHASE 2
-	print_phase2_menu();
-	board[robot->GetRow()][robot->GetCol()].SetRobot(); //set gold square to robot
-	board[0][0].SetLadder(); //sets start square as the ladder to get out
-	print_hidden_board();
-
-	while (true) {
-		reset_robot_tile();
-		robot->ChooseMove();
-		if (check_tile_pit_or_wumpus()) {
-			if (check_ladder()) {
-				break;
-			}
-			board[robot->GetRow()][robot->GetCol()].SetRobot();
-		}
-		else { 
-			break; 
-		}
-		print_hidden_board();
 	}
 }
 
@@ -168,6 +264,7 @@ bool Board::shoot_wumpus() {
 	char choice = ' ';
 	int r, c;
 	char face;
+	cout << endl;
 
 	while (toupper(choice) != 'N') {
 		if (robot->GetArrow() < 1) {
@@ -291,17 +388,19 @@ bool Board::shoot_wumpus() {
 bool Board::check_tile_pit_or_wumpus() {
 	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'P') {
 		cout << endl;
-		cout << "Robot fell into a pit!" << endl;
+		cout << "Robot fell into a pit! (minus 25 points)" << endl;
 		cout << "GAMEOVER" << endl;
 		robot->SetGameOver(true);
+		robot->LosePitPoints(); //lose 25 points
 		cout << "Robot Points: " << robot->GetPoints() << endl; //output points
 		return false;
 	}
 	else if (board[robot->GetRow()][robot->GetCol()].GetType() == 'W') {
 		cout << endl;
-		cout << "Robot was eaten by the Wumpus!" << endl;
+		cout << "Robot was eaten by the Wumpus! (minus 50 points)" << endl;
 		cout << "GAMEOVER" << endl;
 		robot->SetGameOver(true);
+		robot->LoseWumpusPoints(); //lose 50 points
 		cout << "Robot Points: " << robot->GetPoints() << endl; //output points
 		return false;
 	}
@@ -462,7 +561,7 @@ bool Board::check_tile_clues() {
 bool Board::check_ladder() { 
 	if (board[robot->GetRow()][robot->GetCol()].GetType() == 'L') {
 		cout << "Robot made it to the ladder - Robot has " << robot->GetPoints() << " points" << endl;
-		cout << "Onto the next level..." << endl;
+		cout << "Onto the next cave..." << endl;
 		robot->SetLadderTrue();
 		return true;
 	}
@@ -542,6 +641,5 @@ void Board::update_robot_points() {
 	else {
 		file >> x;
 		robot->SetTotalPoints(x);
-		cout << "Robot total points: " << robot->GetPoints() << endl;
 	}
 }

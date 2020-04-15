@@ -20,7 +20,9 @@ public:
 	void SetTotalPoints(int x) { total_points = x; }
 	void AddGoldPoints() { total_points += 50; }
 	void AddRubyPoints() { total_points += 100; }
-
+	void LoseWumpusPoints();
+	void LosePitPoints();
+		
 
 	void ChooseMove();
 	void SetGoldTrue() { gold = true; }

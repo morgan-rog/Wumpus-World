@@ -13,7 +13,6 @@ int main() {
 
 	the_board = new Board();
 
-	the_board->print_hidden_board();
 	the_board->print_welcome_menu();
 
 	cout << "Continue playing from last saved game? Press Y for yes" << endl;
@@ -23,8 +22,11 @@ int main() {
 		the_board->update_robot_points();
 		cout << endl;
 	}
+	
+	cout << "Robot total points: " << the_board->GetRobotPoints() << endl;
 
 	while (toupper(choice) != 'N') {
+		the_board->print_hidden_board();
 		the_board->run_game1(); //phase 1
 
 		if (the_board->check_robot_ladder()) {
@@ -46,12 +48,6 @@ int main() {
 			break;
 		}
 	}
-
-	/*if (the_board->check_robot_gold() ) { //phase 2
-        the_board->run_game2();
-	}
-	*/
-	the_board->print_unhidden_board();
 
     return 0;
 }

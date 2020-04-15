@@ -13,8 +13,9 @@ public:
 	void set_pit_spaces();
 	void set_wumpus_and_gold();
 
-	void run_game1(); //game phase 1
-	void run_game2(); //game phase 2
+	bool wumpus_move(); //returns true if wumpus eats robot
+
+	void run_game1(); //runs game
 
 	void print_welcome_menu();
 	void print_phase2_menu();
@@ -29,6 +30,7 @@ public:
 	bool check_robot_ruby() { return robot->GetRuby(); }
 	bool check_robot_ladder() { return robot->GetLadder(); }
 	bool check_gameover() { return robot->GetGameOver(); }
+	int GetRobotPoints() { return robot->GetPoints(); }
 
 	void reset_robot_tile() { board[robot->GetRow()][robot->GetCol()].SetEmpty(); } //resets current robot tile
 	bool check_tile_clues(); //if true, ask robot if shooting wumpus 
